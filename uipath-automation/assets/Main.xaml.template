@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Activity mc:Ignorable="sap sap2010 sads" 
+  x:Class="Main"
+  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+  xmlns:s="clr-namespace:System;assembly=mscorlib"
+  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+  xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+  xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+  xmlns:sd="clr-namespace:System.Data;assembly=System.Data"
+  xmlns:ui="http://schemas.uipath.com/workflow/activities"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>VisualBasic</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap:VirtualizedContainerService.HintSize>1096,800</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
+  
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>UiPath.Core</AssemblyReference>
+      <AssemblyReference>UiPath.Core.Activities</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  
+  <!-- Main Sequence -->
+  <Sequence DisplayName="Main Sequence" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="strStatus" Default="[&quot;Initialized&quot;]" />
+      <Variable x:TypeArguments="x:Boolean" Name="boolSuccess" Default="False" />
+    </Sequence.Variables>
+    
+    <!-- Log Start -->
+    <ui:LogMessage DisplayName="Log Start" Level="Info" Message="[&quot;Process started at &quot; + DateTime.Now.ToString]" sap2010:WorkflowViewState.IdRef="LogMessage_1" />
+    
+    <!-- Main Process Try-Catch -->
+    <TryCatch DisplayName="Main Process" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+      <TryCatch.Try>
+        <Sequence DisplayName="Process Logic" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          
+          <!-- TODO: Add your automation logic here -->
+          <ui:LogMessage DisplayName="Process Running" Level="Info" Message="Executing main process logic" sap2010:WorkflowViewState.IdRef="LogMessage_2" />
+          
+          <!-- Set success flag -->
+          <Assign DisplayName="Set Success" sap2010:WorkflowViewState.IdRef="Assign_1">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Boolean">[boolSuccess]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Boolean">[True]</InArgument>
+            </Assign.Value>
+          </Assign>
+          
+        </Sequence>
+      </TryCatch.Try>
+      
+      <TryCatch.Catches>
+        <!-- Handle Business Rule Exception -->
+        <Catch x:TypeArguments="ui:BusinessRuleException">
+          <ActivityAction x:TypeArguments="ui:BusinessRuleException">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="ui:BusinessRuleException" Name="businessException" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Handle Business Exception" sap2010:WorkflowViewState.IdRef="Sequence_3">
+              <ui:LogMessage DisplayName="Log Business Error" Level="Warn" Message="[&quot;Business Rule Exception: &quot; + businessException.Message]" sap2010:WorkflowViewState.IdRef="LogMessage_3" />
+              <Assign DisplayName="Set Status">
+                <Assign.To><OutArgument x:TypeArguments="x:String">[strStatus]</OutArgument></Assign.To>
+                <Assign.Value><InArgument x:TypeArguments="x:String">[&quot;BusinessException&quot;]</InArgument></Assign.Value>
+              </Assign>
+            </Sequence>
+          </ActivityAction>
+        </Catch>
+        
+        <!-- Handle System Exception -->
+        <Catch x:TypeArguments="s:Exception">
+          <ActivityAction x:TypeArguments="s:Exception">
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="s:Exception" Name="systemException" />
+            </ActivityAction.Argument>
+            <Sequence DisplayName="Handle System Exception" sap2010:WorkflowViewState.IdRef="Sequence_4">
+              <ui:LogMessage DisplayName="Log System Error" Level="Error" Message="[&quot;System Exception: &quot; + systemException.Message + &quot; | Source: &quot; + systemException.Source]" sap2010:WorkflowViewState.IdRef="LogMessage_4" />
+              <Assign DisplayName="Set Status">
+                <Assign.To><OutArgument x:TypeArguments="x:String">[strStatus]</OutArgument></Assign.To>
+                <Assign.Value><InArgument x:TypeArguments="x:String">[&quot;SystemException&quot;]</InArgument></Assign.Value>
+              </Assign>
+              <Rethrow DisplayName="Rethrow Exception" sap2010:WorkflowViewState.IdRef="Rethrow_1" />
+            </Sequence>
+          </ActivityAction>
+        </Catch>
+      </TryCatch.Catches>
+      
+      <TryCatch.Finally>
+        <Sequence DisplayName="Cleanup" sap2010:WorkflowViewState.IdRef="Sequence_5">
+          <ui:LogMessage DisplayName="Log Cleanup" Level="Info" Message="[&quot;Cleanup completed. Final status: &quot; + strStatus]" sap2010:WorkflowViewState.IdRef="LogMessage_5" />
+        </Sequence>
+      </TryCatch.Finally>
+    </TryCatch>
+    
+    <!-- Log End -->
+    <ui:LogMessage DisplayName="Log End" Level="Info" Message="[&quot;Process completed. Success: &quot; + boolSuccess.ToString]" sap2010:WorkflowViewState.IdRef="LogMessage_6" />
+    
+  </Sequence>
+</Activity>

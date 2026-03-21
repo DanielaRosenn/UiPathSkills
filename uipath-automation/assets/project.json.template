@@ -1,0 +1,54 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "description": "{{PROJECT_DESCRIPTION}}",
+  "main": "Main.xaml",
+  "projectVersion": "1.0.0",
+  "projectType": "Workflow",
+  "targetFramework": "Windows",
+  "expressionLanguage": "VisualBasic",
+  "entryPoints": [
+    {
+      "filePath": "Main.xaml",
+      "uniqueId": "{{UNIQUE_ID}}",
+      "input": [],
+      "output": []
+    }
+  ],
+  "dependencies": {
+    "UiPath.System.Activities": "[23.10.0]",
+    "UiPath.UIAutomation.Activities": "[23.10.0]"
+  },
+  "webServices": [],
+  "schemaVersion": "4.0",
+  "studioVersion": "23.10.0.0",
+  "projectId": "{{PROJECT_ID}}",
+  "runtimeOptions": {
+    "autoDispose": false,
+    "netFrameworkLazyLoading": false,
+    "isPausable": true,
+    "isAttended": false,
+    "requiresUserInteraction": true,
+    "supportsPersistence": false,
+    "workflowSerialization": "DataContract",
+    "excludedLoggedData": [
+      "Private:*",
+      "*password*",
+      "*credential*",
+      "*secret*"
+    ],
+    "executionType": "Workflow",
+    "readyForPictureInPicture": false,
+    "startsInPictureInPicture": false,
+    "isTestProject": false
+  },
+  "designOptions": {
+    "projectProfile": "Developement",
+    "outputType": "Process",
+    "libraryOptions": {
+      "includeOriginalXaml": false,
+      "privateWorkflows": []
+    },
+    "fileInfoCollection": []
+  },
+  "toolVersion": "1.0.0.0"
+}

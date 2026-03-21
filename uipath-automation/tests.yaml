@@ -1,0 +1,150 @@
+# Test cases for uipath-automation skill
+# Optional per case: expected_element_groups (list of lists = OR within group, AND across groups),
+# case_insensitive_elements: true
+skill_name: uipath-automation
+version: "2.0.0"
+
+test_cases:
+  - id: basic-sequence
+    name: "Generate basic sequence workflow"
+    prompt: "Create a UiPath sequence that reads data from an Excel file named 'input.xlsx', sheet 'Data', and logs each row's 'Name' column"
+    expected_elements:
+      - "<Sequence"
+      - "DataTable"
+      - "LogMessage"
+    expected_element_groups:
+      - ["UseExcelFile", "Use Excel File"]
+      - ["ReadRange", "Read Range"]
+      - ["ForEach", "For Each", "ForEachRow", "ForEachRowInDataTable"]
+    expected_patterns:
+      - 'DisplayName="'
+      - 'FilePath='
+      - 'SheetName='
+    forbidden_patterns:
+      - "TODO"
+      - "PLACEHOLDER"
+      - "your-file"
+      - "path/to"
+    min_output_length: 200
+    evaluation_criteria:
+      - name: "Valid XAML structure"
+        weight: 0.3
+      - name: "Correct Excel activities (UseExcelFile, ReadRange)"
+        weight: 0.3
+      - name: "Proper variable declarations"
+        weight: 0.2
+      - name: "Follows naming conventions"
+        weight: 0.2
+
+  - id: browser-automation-modern
+    name: "Generate modern browser automation"
+    prompt: "Create a workflow that opens Chrome browser, navigates to https://www.google.com, types 'UiPath automation' in the search box, and clicks the search button. Use modern UI activities."
+    expected_elements: []
+    expected_element_groups:
+      - ["UseApplicationBrowser", "Use Application/Browser"]
+      - ["TypeInto", "Type Into"]
+      - ["Click"]
+    expected_patterns:
+      - 'BrowserType='
+      - 'Url='
+      - 'Target'
+      - 'Selector='
+    forbidden_patterns:
+      - "OpenBrowser"
+      - "AttachBrowser"
+    evaluation_criteria:
+      - name: "Uses modern UseApplicationBrowser"
+        weight: 0.4
+      - name: "Proper selector patterns"
+        weight: 0.3
+      - name: "Complete workflow structure"
+        weight: 0.3
+
+  - id: error-handling-trycatch
+    name: "Generate Try-Catch error handling"
+    prompt: "Create a workflow with comprehensive error handling that reads a file, processes it, and handles both business exceptions and system exceptions differently"
+    expected_elements:
+      - "TryCatch"
+      - "Catch"
+      - "BusinessRuleException"
+      - "Exception"
+      - "LogMessage"
+    expected_patterns:
+      - 'Level="Error"'
+      - 'x:TypeArguments='
+    evaluation_criteria:
+      - name: "Multiple exception types handled"
+        weight: 0.3
+      - name: "Proper logging in catch blocks"
+        weight: 0.3
+      - name: "Finally block for cleanup"
+        weight: 0.2
+      - name: "Meaningful error messages"
+        weight: 0.2
+
+  - id: project-json-generation
+    name: "Generate project.json configuration"
+    prompt: "Create a project.json file for a Windows UiPath project named 'InvoiceProcessor' with Excel, UI Automation, and System activities dependencies"
+    expected_elements:
+      - "dependencies"
+      - "InvoiceProcessor"
+      - "UiPath"
+    expected_element_groups:
+      - ["projectVersion", "schemaVersion"]
+    expected_patterns:
+      - '"targetFramework"'
+      - '"Windows"'
+    forbidden_patterns:
+      - "TODO"
+      - "PLACEHOLDER"
+    evaluation_criteria:
+      - name: "Valid JSON structure"
+        weight: 0.3
+      - name: "Correct dependency format with versions"
+        weight: 0.3
+      - name: "Windows target framework"
+        weight: 0.2
+      - name: "Appropriate project settings"
+        weight: 0.2
+
+  - id: queue-operations
+    name: "Generate queue operations workflow"
+    prompt: "Create a workflow that gets a transaction item from an Orchestrator queue named 'InvoiceQueue', processes it, and sets the transaction status based on success or failure"
+    expected_elements:
+      - "GetQueueItem"
+      - "SetTransactionStatus"
+      - "QueueItem"
+    expected_patterns:
+      - 'QueueName='
+      - 'Status='
+      - 'TransactionItem='
+    evaluation_criteria:
+      - name: "Correct queue activities"
+        weight: 0.4
+      - name: "Proper status handling (Success/Failed)"
+        weight: 0.3
+      - name: "Error handling around queue operations"
+        weight: 0.3
+
+  - id: datatable-operations
+    name: "Generate DataTable manipulation"
+    prompt: "Create a workflow that creates a DataTable with columns 'ID', 'Name', 'Amount', adds 3 sample rows, filters rows where Amount > 100, and writes the filtered results to a new Excel file"
+    expected_elements:
+      - "DataTable"
+    expected_element_groups:
+      - ["BuildDataTable", "Build Data Table"]
+      - ["WriteRange", "Write Range", "AppendRange"]
+      - ["FilterDataTable", "Filter Data Table", "Filter Table"]
+    expected_patterns:
+      - 'DataTable'
+      - 'WriteRange|Write Range'
+    min_output_length: 150
+    evaluation_criteria:
+      - name: "Correct DataTable creation"
+        weight: 0.3
+      - name: "Proper filtering logic"
+        weight: 0.3
+      - name: "Excel write operation"
+        weight: 0.2
+      - name: "Variable management"
+        weight: 0.2
