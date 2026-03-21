@@ -1,0 +1,119 @@
+# Test cases for uipath-cli-git skill
+skill_name: uipath-cli-git
+version: "1.1.0"
+
+test_cases:
+  - id: init-gitignore-first-commit
+    name: "Initialize Git with UiPath .gitignore"
+    prompt: "I have a new UiPath Studio project folder. Give me the git commands and a .gitignore body to initialize the repo, ignore local Studio artifacts, track project.json, and make the first commit."
+    expected_elements:
+      - "git init"
+      - ".gitignore"
+      - ".local"
+      - "project.json"
+      - "git add"
+      - "git commit"
+    expected_patterns:
+      - "(?i)nupkg"
+    forbidden_patterns:
+      - "TODO"
+      - "PLACEHOLDER"
+    min_output_length: 150
+    max_output_length: 50000
+    evaluation_criteria:
+      - name: "Mentions core Git init and first commit"
+        weight: 0.35
+      - name: "Ignores local Studio paths and build noise"
+        weight: 0.35
+      - name: "Clear, copy-paste friendly"
+        weight: 0.3
+
+  - id: feature-branch-workflow
+    name: "Feature branch workflow for UiPath"
+    prompt: "List the git commands for a UiPath developer workflow: update main, create a feature branch, commit workflow changes, push to origin, and merge back to main after review."
+    expected_elements:
+      - "git pull"
+      - "git push"
+      - "git merge"
+      - "origin"
+      - "main"
+    expected_patterns:
+      - "(?i)git (checkout|switch)"
+      - "(?i)feature"
+    forbidden_patterns:
+      - "TODO"
+    min_output_length: 200
+    max_output_length: 50000
+    evaluation_criteria:
+      - name: "Coherent branch and remote flow"
+        weight: 0.4
+      - name: "Matches common UiPath team practice"
+        weight: 0.35
+      - name: "No unsafe advice (e.g. blind force push)"
+        weight: 0.25
+
+  - id: merge-conflict-xaml
+    name: "Merge conflict in XAML"
+    prompt: "What git commands and steps should I use when Main.xaml has merge conflicts after a pull?"
+    expected_elements:
+      - "git status"
+      - "git add"
+      - "Main.xaml"
+      - "merge"
+    expected_patterns:
+      - "(?i)(<<<<<<<|=======|>>>>>>>|mergetool)"
+    forbidden_patterns:
+      - "TODO"
+    min_output_length: 120
+    max_output_length: 50000
+    evaluation_criteria:
+      - name: "Explains conflict markers or merge tool"
+        weight: 0.4
+      - name: "Completes merge with add/commit"
+        weight: 0.35
+      - name: "Practical for UiPath workflows"
+        weight: 0.25
+
+  - id: github-actions-uipath-ci
+    name: "GitHub Actions CI with uipathcli"
+    prompt: "Outline a minimal GitHub Actions workflow on windows-latest that checks out the repo, installs the official uipathcli from GitHub releases, runs studio package analyze, then packs the Studio project."
+    expected_elements:
+      - "uipath studio package analyze"
+      - "uipath studio package pack"
+      - "windows-latest"
+      - "actions/checkout"
+      - "github.com/UiPath/uipathcli"
+    expected_patterns:
+      - "(?i)github/workflows"
+    forbidden_patterns:
+      - "TODO"
+    min_output_length: 150
+    max_output_length: 50000
+    evaluation_criteria:
+      - name: "Uses Windows runner and official CLI install pattern"
+        weight: 0.35
+      - name: "Includes analyze and pack for Studio projects"
+        weight: 0.4
+      - name: "Reasonable CI structure"
+        weight: 0.25
+
+  - id: analyze-and-review-workflow
+    name: "Analyze project and review strategy"
+    prompt: "How should I use the UiPath CLI to analyze a Studio project for governance issues and combine that with code review? Mention the official CLI repo."
+    expected_elements:
+      - "uipath studio package analyze"
+      - "github.com/UiPath/uipathcli"
+      - "uipath-code-reviewer"
+    expected_patterns:
+      - "(?i)(governance|policy|violations)"
+    forbidden_patterns:
+      - "TODO"
+    min_output_length: 120
+    max_output_length: 50000
+    evaluation_criteria:
+      - name: "Names analyze for automated checks"
+        weight: 0.4
+      - name: "Separates CLI analysis from human or skill-based review"
+        weight: 0.35
+      - name: "References official uipathcli"
+        weight: 0.25
