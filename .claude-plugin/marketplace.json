@@ -1,5 +1,8 @@
 {
   "name": "uipath-skills",
+  "owner": {
+    "name": "DanielaRosenn"
+  },
   "metadata": {
     "description": "Agent skills for UiPath Studio automation development",
     "version": "1.0.0"
