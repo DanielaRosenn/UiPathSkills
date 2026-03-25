@@ -1,0 +1,20 @@
+{
+  "name": "uipath-skills",
+  "metadata": {
+    "description": "Agent skills for UiPath Studio automation development",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "uipath-skills",
+      "description": "Skills for UiPath Studio development: XAML workflow generation, Git/CLI operations, and long-running automation with HITL persistence.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./uipath-automation",
+        "./uipath-cli-git",
+        "./uipath-longrunning-workflow"
+      ]
+    }
+  ]
+}
