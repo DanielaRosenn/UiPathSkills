@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UiPath Code Review Fix Suggestions",
+  "description": "Machine-readable fix suggestions from code review",
+  
+  "projectName": "{{PROJECT_NAME}}",
+  "reviewDate": "{{REVIEW_DATE}}",
+  "reviewVersion": "1.0.0",
+  
+  "summary": {
+    "totalIssues": 0,
+    "autoFixable": 0,
+    "manualRequired": 0,
+    "bySeverity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "info": 0
+    },
+    "byCategory": {
+      "naming": 0,
+      "errorHandling": 0,
+      "security": 0,
+      "performance": 0,
+      "maintainability": 0,
+      "bestPractices": 0
+    }
+  },
+  
+  "fixes": [
+    {
+      "id": "FIX-001",
+      "ruleId": "RULE-001",
+      "severity": "medium",
+      "category": "naming",
+      "file": "Main.xaml",
+      "line": 23,
+      "column": 5,
+      "endLine": 23,
+      "endColumn": 55,
+      "description": "Variable 'filename' should use naming convention (strFileName)",
+      "impact": "Code readability and maintainability",
+      "currentCode": "<Variable x:TypeArguments=\"x:String\" Name=\"filename\" />",
+      "suggestedCode": "<Variable x:TypeArguments=\"x:String\" Name=\"strFileName\" />",
+      "autoFixable": true,
+      "fixType": "replace",
+      "fixDetails": {
+        "searchPattern": "Name=\"filename\"",
+        "replacePattern": "Name=\"strFileName\"",
+        "isRegex": false,
+        "caseSensitive": true,
+        "additionalReplacements": [
+          {
+            "search": "[filename]",
+            "replace": "[strFileName]",
+            "scope": "file"
+          },
+          {
+            "search": "[filename.",
+            "replace": "[strFileName.",
+            "scope": "file"
+          }
+        ]
+      },
+      "manualSteps": null,
+      "references": [
+        "https://docs.uipath.com/studio/docs/naming-conventions"
+      ],
+      "tags": ["naming", "variable", "convention"]
+    },
+    {
+      "id": "FIX-002",
+      "ruleId": "RULE-010",
+      "severity": "high",
+      "category": "errorHandling",
+      "file": "ProcessData.xaml",
+      "line": 45,
+      "column": 3,
+      "endLine": 45,
+      "endColumn": 80,
+      "description": "HTTP request missing Try-Catch error handling",
+      "impact": "Workflow will fail on network errors without proper handling",
+      "currentCode": "<ui:HttpClient Endpoint=\"[apiUrl]\" Response=\"[response]\" />",
+      "suggestedCode": "<!-- Wrap in TryCatch - see manualSteps -->",
+      "autoFixable": false,
+      "fixType": "wrap",
+      "fixDetails": null,
+      "manualSteps": [
+        "Add TryCatch activity around the HTTP request",
+        "Add Catch block for TimeoutException",
+        "Add Catch block for HttpRequestException",
+        "Add generic Exception catch as fallback",
+        "Add logging in each catch block",
+        "Consider adding RetryScope for transient errors"
+      ],
+      "references": [
+        "https://docs.uipath.com/studio/docs/error-handling"
+      ],
+      "tags": ["error-handling", "http", "try-catch"]
+    },
+    {
+      "id": "FIX-003",
+      "ruleId": "RULE-020",
+      "severity": "critical",
+      "category": "security",
+      "file": "Main.xaml",
+      "line": 67,
+      "column": 5,
+      "endLine": 70,
+      "endColumn": 12,
+      "description": "Hardcoded password detected",
+      "impact": "Security vulnerability - credentials exposed in source code",
+      "currentCode": "<Assign DisplayName=\"Set Password\">\n  <Assign.Value><InArgument x:TypeArguments=\"x:String\">[\"MyPassword123\"]</InArgument></Assign.Value>\n</Assign>",
+      "suggestedCode": "<ui:GetRobotCredential CredentialAssetName=\"SystemCredential\" Username=\"[strUsername]\" Password=\"[secPassword]\" />",
+      "autoFixable": false,
+      "fixType": "replace",
+      "fixDetails": null,
+      "manualSteps": [
+        "Create Credential Asset in Orchestrator named 'SystemCredential'",
+        "Add SecureString variable for password: secPassword",
+        "Replace Assign with GetRobotCredential activity",
+        "Update all references to use the credential",
+        "Remove any logging of the password value"
+      ],
+      "references": [
+        "https://docs.uipath.com/orchestrator/docs/managing-assets"
+      ],
+      "tags": ["security", "credentials", "hardcoded"]
+    }
+  ],
+  
+  "metadata": {
+    "generatedBy": "uipath-code-reviewer",
+    "version": "1.0.0",
+    "rulesApplied": 45,
+    "filesAnalyzed": 5,
+    "analysisTimeMs": 1234
+  }
+}
